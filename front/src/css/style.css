@@ -1,0 +1,90 @@
+body {
+    background-color: #e5e3de;
+}
+
+.back {
+    width: 100vw;
+    height: 100px;
+    position: absolute;
+    z-index: 1;
+    background-color: #00a884;
+}
+
+.container {
+    position: relative;
+    z-index: 10;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.chat {
+    box-sizing: border-box;
+    height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
+    box-shadow: 8px 8px 12px -1px rgba(34, 60, 80, 0.11);
+}
+
+
+.chat__panel {
+    background-color: #f0f2f5;
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.chat__search {}
+
+.chat__search:hover {
+    cursor: pointer;
+}
+
+.chat__search-img {
+    fill: yellow;
+}
+
+.chat__list {
+    background-color: #efeae2;
+    margin: 0;
+    background-image: url("/front/src/img/bg-chat.png");
+    list-style: none;
+    flex: 1 0 auto;
+    overflow-y: auto;
+}
+
+.chat__item {}
+
+.chat__form {
+    background-color: #f0f2f5;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.chat__input-text {
+
+    width: 900px;
+    display: block;
+    padding: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 0;
+    outline: 1px solid #ccc;
+}
+
+.chat__input-text:focus {
+    outline: 2px solid #bbb;
+}
+
+.attach-file {
+    width: 25px;
+    margin-left: 10px;
+}
+
+.attach-file {
+    cursor: pointer;
+}
+
+.chat__attach-img {
+    fill: gray;
+}

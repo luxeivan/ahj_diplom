@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MemoryChat</title>
 </head>
+
 <body>
+    <div class="back"></div>
     <div class="container">
         <div class="chat">
+            <div class="chat__panel">
+                <div class="chat__search"><img src="img/search.svg" class="chat__search-img" alt="Поиск" width="20"></div>
+            </div>
+            <ul class="chat__list">
+                <li class="chat__item"></li>
+            </ul>
             <form action="" class="chat__form">
                 <input type="text" class="chat__input-text" id="input_text">
+                <div class="attach-file"><img src="img/attach.svg" class="chat__attach-img" alt="Прикрепить файл" width="25"></div>
             </form>
         </div>
     </div>
 </body>
+
 </html>
