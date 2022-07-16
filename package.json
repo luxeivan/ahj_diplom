@@ -6,7 +6,7 @@
   "scripts": {
     "start": "live-server front/dist",
     "dev": "webpack serve --config webpack.dev.js",
-    "devserver": "nodemon back/server.js",
+    "devserver": "nodemon back/server.js --ignore 'front/*'",
     "build": "webpack --config webpack.prod.js",
     "lint": "eslint .",
     "test": "jest",

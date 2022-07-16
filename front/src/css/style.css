@@ -87,10 +87,23 @@ body {
     padding: 15px;
     border-radius: 5px;
     box-shadow: 2px 2px 3px -1px rgba(34, 60, 80, 0.2);
+    opacity: 100%;
+    animation: fade-in 1s ease;
 }
 
 .chat__item-content {
     padding-bottom: 20px;
+}
+.chat__item-text {
+    margin: 0;
+}
+.chat__item-img, .chat__item-audio,.chat__item-video{
+    display: block;
+    max-width: 500px;
+    margin-top: 10px;
+}
+.chat__item-audio::-webkit-media-controls-panel{
+    background-color: #fff;
 }
 
 .chat__item-time {
@@ -135,4 +148,13 @@ body {
 
 .chat__attach-img {
     fill: gray;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
