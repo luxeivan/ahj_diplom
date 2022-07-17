@@ -8,6 +8,7 @@ export default class Chat {
         this.inputText = document.getElementById('input_text');
         this.inputSearch = document.querySelector('.chat__search-input');
         this.chatList = document.querySelector('.chat__list');
+        this.chat = document.querySelector('.chat');
         this.chatListArea = document.querySelector('.chat__list-area');
         this.addFile = document.getElementById('add-file');
         this.init();
@@ -41,7 +42,7 @@ export default class Chat {
                     debounceTime(1000),
                     distinctUntilChanged()
                 )
-        ).pipe(map(event => this.inputSearch.value), switchMap((text)=>{return this.getTenMessages(0,text)}))
+        ).pipe(map(event => this.inputSearch.value), switchMap((text) => { return this.getTenMessages(0, text) }))
             .subscribe(res => {
                 this.renderMessages(res, true, 'afterbegin', true);
             },
@@ -58,21 +59,53 @@ export default class Chat {
         //подписка на события прикрепления файла
         fromEvent(this.addFile, 'change')
             .subscribe(event => {
-                if (!event.target.files.length) return;
+                if (!event.target.files.length || !event.target.files[0].type.match(/(image|video|audio)/)) return;
                 const reader = new FileReader()
                 reader.onload = file => {
                     this.addMessageToServer(event.target.files[0].name, event.target.files[0].type, file.target.result)
                 }
-
                 reader.readAsDataURL(event.target.files[0]);
             })
+
+        //подписка на события drag&drop
+        fromEvent(this.chat, 'dragover').subscribe(event => {
+            event.preventDefault();
+            document.querySelector('.drag').classList.add('active');
+            return false;
+        });
+        //подписка на события drag&drop
+        fromEvent(this.chat, 'dragleave').subscribe(event => {
+            document.querySelector('.drag').classList.remove('active');
+            return false;
+        });
+        //подписка на события drag&drop
+        fromEvent(this.chat, 'dragend').subscribe(event => {
+            event.preventDefault();
+            document.querySelector('.drag').classList.remove('active');
+            return false;
+        });
+        //подписка на события drag&drop
+        fromEvent(this.chat, 'drop').subscribe(event => {
+            event.preventDefault();
+            event.stopPropagation();
+            document.querySelector('.drag').classList.remove('active');
+            if (!event.dataTransfer.files.length || !event.dataTransfer.files[0].type.match(/(image|video|audio)/)) return;
+            let name = event.dataTransfer.files[0].name;
+            let type = event.dataTransfer.files[0].type;
+            const reader = new FileReader()
+            reader.onload = file => {
+                this.addMessageToServer(name, type, file.target.result)
+            }
+            reader.readAsDataURL(event.dataTransfer.files[0]);
+
+        });
 
         //подписка на события скрола сообщений
         fromEvent(this.chatListArea, 'scroll')
             .pipe(
                 filter(event => this.chatListArea.scrollTop === 0),
                 map(event => document.getElementsByClassName('chat__item').length),
-                switchMap((first)=>{return this.getTenMessages(first,this.inputSearch.value)}),
+                switchMap((first) => { return this.getTenMessages(first, this.inputSearch.value) }),
                 filter(arr => arr.length > 0)
             )
             .subscribe(res => {
@@ -96,7 +129,7 @@ export default class Chat {
     }
 
     //Получить 10 сообщений в массиве начиная с указанной позиции
-    getTenMessages(first = 0,searchText='') {
+    getTenMessages(first = 0, searchText = '') {
         return ajax.getJSON(`http://localhost:3000/messages?first=${first}&searchtext=${searchText}`)
             .pipe(
                 catchError(err => {
@@ -146,6 +179,19 @@ export default class Chat {
         this.chatListArea.scrollTop = this.chatListArea.scrollHeight - this.chatListArea.clientHeight;
     }
 
+    stringToLink(text) {
+        let matched = text.match(/http[s]?:\/\/\S*/g);
+        let result = '';
+        text.split(/http[s]?:\/\/\S*/g).forEach((item, index) => {
+            result += item;
+            if (matched.length > index) {
+                result += `<a href="${matched[index]}">${matched[index]}</a>`;
+            }
+
+        });
+        return result;
+    }
+
     //Отрисовка массива сообщений в интерфейсе
     renderMessages(messages, scroll = true, position = 'afterbegin', clear = false) {
         const oldScroll = this.chatListArea.scrollHeight;
@@ -153,18 +199,28 @@ export default class Chat {
 
         messages.forEach(message => {
             let data = '';
-            if (message.type.match('image') && message.data != '') {
-                data = `<img src="${message.data}" class="chat__item-img"/>`
+            let formatedMessage = '';
+            //Если информация сожержит ссылку
+            if (message.message.match('https://') || message.message.match('http://')) {
+                formatedMessage = this.stringToLink(message.message);
+            } else {
+                formatedMessage = message.message;
             }
+            //Если информация сожержит картинку
+            if (message.type.match('image') && message.data != '') {
+                data = `<img src="${message.data}" class="chat__item-img"/><a href="${message.data}" download="${message.message}" class="chat__item-href">Скачать</a>`
+            }
+            //Если информация сожержит аудио
             if (message.type.match('audio') && message.data != '') {
                 data = `<audio src="${message.data}" controls class="chat__item-audio"/>`
             }
+            //Если информация сожержит видео
             if (message.type.match('video') && message.data != '') {
                 data = `<video controls class="chat__item-video"><source src="${message.data}" /></video>`
             }
             this.chatList.insertAdjacentHTML(position, `
             <li class="chat__item">
-            <div class="chat__item-content"><p class="chat__item-text">${message.message}</p>${data}</div>  
+            <div class="chat__item-content"><p class="chat__item-text">${formatedMessage}</p>${data}</div>  
             <div class="chat__item-time">${message.date}</div></li>`);
         });
         const newScroll = this.chatListArea.scrollHeight;
