@@ -7,7 +7,7 @@ module.exports = {
   target: 'web',
   output: {
     path: path.resolve(__dirname, 'front/dist'),
-    publicPath: '/',
+    publicPath: '/ahj_diplom',
   },
   module: {
     rules: [
