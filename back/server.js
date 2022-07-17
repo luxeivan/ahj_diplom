@@ -98,8 +98,8 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '20mb' }));
 
 const jsonParser = express.json();
 app.use(cors());
-app.listen(443, () => {
-    console.log('server start to port 443');
+app.listen(3000, () => {
+    console.log('server start to port 3000');
 });
 
 // app.get("/all", (req, res) => {
