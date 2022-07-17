@@ -98,7 +98,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '20mb' }));
 
 const jsonParser = express.json();
 app.use(cors());
-app.listen(process.env.PORT || 3000, '0.0.0.0',, () => {
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
     console.log(`server start to port ${process.env.PORT}`);
 });
 
