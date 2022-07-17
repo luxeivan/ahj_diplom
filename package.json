@@ -7,6 +7,7 @@
     "start": "live-server front/dist",
     "dev": "webpack serve --config webpack.dev.js",
     "devserver": "nodemon back/server.js --ignore 'front/*'",
+    "startserver": "node back/server.js",
     "build": "webpack --config webpack.prod.js",
     "lint": "eslint .",
     "test": "jest",
