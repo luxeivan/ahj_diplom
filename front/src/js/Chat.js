@@ -4,7 +4,7 @@ import { ajax } from 'rxjs/ajax'
 
 export default class Chat {
     constructor() {
-        this.url = 'http://localhost:3000';
+        this.url = 'https://ahjdiplom.herokuapp.com:3000/';
         this.inputText = document.getElementById('input_text');
         this.inputSearch = document.querySelector('.chat__search-input');
         this.chatList = document.querySelector('.chat__list');
@@ -130,7 +130,7 @@ export default class Chat {
 
     //Получить 10 сообщений в массиве начиная с указанной позиции
     getTenMessages(first = 0, searchText = '') {
-        return ajax.getJSON(`http://localhost:3000/messages?first=${first}&searchtext=${searchText}`)
+        return ajax.getJSON(`https://ahjdiplom.herokuapp.com/messages?first=${first}&searchtext=${searchText}`)
             .pipe(
                 catchError(err => {
                     console.log(err);
@@ -141,7 +141,7 @@ export default class Chat {
     //Отправить сообщение на сервер
     addMessageToServer(message, type = 'text', data = '') {
         ajax({
-            url: 'http://localhost:3000/add',
+            url: 'https://ahjdiplom.herokuapp.com/add',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
